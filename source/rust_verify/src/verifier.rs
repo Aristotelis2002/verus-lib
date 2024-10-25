@@ -288,7 +288,7 @@ pub struct Verifier {
     crate_name: Option<String>,
     crate_names: Option<Vec<String>>,
     air_no_span: Option<vir::messages::Span>,
-    current_crate_modules: Option<Vec<vir::ast::Module>>,
+    pub current_crate_modules: Option<Vec<vir::ast::Module>>,
     item_to_module_map: Option<Arc<crate::rust_to_vir::ItemToModuleMap>>,
     buckets: HashMap<BucketId, Bucket>,
 

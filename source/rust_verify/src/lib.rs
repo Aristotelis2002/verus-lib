@@ -29,7 +29,7 @@ extern crate rustc_trait_selection;
 extern crate smallvec;
 
 mod attributes;
-mod buckets;
+pub mod buckets;
 pub mod commands;
 pub mod config;
 
@@ -45,7 +45,7 @@ mod expand_errors_driver;
 pub mod file_loader;
 mod fn_call_to_vir;
 mod hir_hide_reveal_rewrite;
-mod import_export;
+pub mod import_export;
 pub mod lifetime;
 mod lifetime_ast;
 mod lifetime_emit;
@@ -65,7 +65,7 @@ pub mod rust_to_vir_trait;
 pub mod singular;
 mod spans;
 mod trait_conflicts;
-mod user_filter;
+pub mod user_filter;
 pub mod util;
 pub mod verifier;
 pub mod verus_items;
