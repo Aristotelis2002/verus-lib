@@ -47,7 +47,7 @@ const RLIMIT_PER_SECOND: f32 = 3000000f32;
 #[derive(Clone, Hash, PartialEq, Eq)]
 pub(crate) struct ProgressBarId(String);
 
-trait Diagnostics: air::messages::Diagnostics {
+pub trait Diagnostics: air::messages::Diagnostics {
     fn use_progress_bars(&self) -> bool;
     fn add_progress_bar(&self, ctx: CommandContext);
     fn complete_progress_bar(&self, ctx: CommandContext);
@@ -290,7 +290,7 @@ pub struct Verifier {
     air_no_span: Option<vir::messages::Span>,
     pub current_crate_modules: Option<Vec<vir::ast::Module>>,
     item_to_module_map: Option<Arc<crate::rust_to_vir::ItemToModuleMap>>,
-    buckets: HashMap<BucketId, Bucket>,
+    pub buckets: HashMap<BucketId, Bucket>,
 
     // proof debugging purposes
     expand_flag: bool,
@@ -298,7 +298,7 @@ pub struct Verifier {
     error_format: Option<ErrorOutputType>,
 }
 
-fn report_chosen_triggers(
+pub fn report_chosen_triggers(
     diagnostics: &impl air::messages::Diagnostics,
     chosen: &vir::context::ChosenTriggers,
 ) {
@@ -384,10 +384,10 @@ impl std::ops::Add for RunCommandQueriesResult {
     }
 }
 
-struct VerifyBucketOut {
-    time_smt_init: Duration,
-    time_smt_run: Duration,
-    rlimit_count: Option<u64>,
+pub struct VerifyBucketOut {
+    pub time_smt_init: Duration,
+    pub time_smt_run: Duration,
+    pub rlimit_count: Option<u64>,
 }
 
 impl Verifier {
@@ -470,7 +470,7 @@ impl Verifier {
         self.func_times.extend(other.func_times);
     }
 
-    fn get_bucket<'a>(&'a self, bucket_id: &BucketId) -> &'a Bucket {
+    pub fn get_bucket<'a>(&'a self, bucket_id: &BucketId) -> &'a Bucket {
         self.buckets.get(bucket_id).expect("expected valid BucketId")
     }
 
@@ -492,7 +492,7 @@ impl Verifier {
         })
     }
 
-    fn create_log_file(
+    pub fn create_log_file(
         &mut self,
         bucket_id_opt: Option<&BucketId>,
         suffix: &str,
@@ -1231,7 +1231,7 @@ impl Verifier {
     }
 
     // Verify a single bucket
-    fn verify_bucket(
+    pub fn verify_bucket(
         &mut self,
         reporter: &impl Diagnostics,
         krate: &vir::sst::KrateSst,
@@ -2163,13 +2163,11 @@ impl Verifier {
                         // if it is the active bucket, mark it as done, and reset the active bucket
                         if let Some(m) = active_bucket {
                             if m == id {
-                                assert!(
-                                    messages
-                                        .get_mut(id)
-                                        .expect("message id out of range")
-                                        .1
-                                        .is_empty()
-                                );
+                                assert!(messages
+                                    .get_mut(id)
+                                    .expect("message id out of range")
+                                    .1
+                                    .is_empty());
                                 active_bucket = None;
                             }
                         }
